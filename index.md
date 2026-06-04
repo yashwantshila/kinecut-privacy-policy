@@ -1,7 +1,7 @@
 # Privacy Policy for KineCut
 
-**Last updated:** May 17, 2026
-**Effective date:** May 24, 2026
+**Last updated:** June 4, 2026
+**Effective date:** June 11, 2026
 **App name:** KineCut
 **Package:** com.kinecut.app
 **Publisher / Data Controller:** Yashwant Shila ("we", "our", "us")
@@ -11,7 +11,12 @@ This Privacy Policy explains what information KineCut ("the app") accesses, proc
 
 By installing or using KineCut, you confirm that you have read and accepted this Privacy Policy.
 
-> **What changed in this version (May 17, 2026):** KineCut now displays **Google AdMob advertising** (rewarded and interstitial ads). As a result, the app now accesses the **Android Advertising ID (AAID)**, may serve **personalized ads**, and shows a Google consent form in regions where one is required. The previous version stated the app contained no ads and did not use the advertising ID — that is no longer accurate. Because this is a material change, we are publishing it at least 7 days before the effective date, in line with Section 13. You will be asked to review and accept this updated policy again inside the app.
+> **What changed in this version (June 4, 2026):** Two material changes:
+>
+> 1. **Optional "bring your own key" Google Gemini integration.** If you choose to add your own Google Gemini API key, KineCut can send the **audio you transcribe** and the **resulting transcript text** directly to **Google's Gemini API**, billed to and governed by **your own** Google account, to improve transcription and caption quality. This feature is **off unless you add a key**. **Important: if your Gemini key uses Google's free / unpaid tier, Google's terms allow Google to use what you send (your audio and text) and what it returns to improve Google's products and services, and human reviewers may read, annotate and process it.** On Google's paid tier, Google states it does not use your prompts or responses to improve its products. See Section 1.9.
+> 2. **Background export with a progress notification.** KineCut now runs exports in a short-lived foreground service so the export survives if you leave the app, and it shows a progress notification. On Android 13+ the app may ask for **notification permission**. No content leaves your device for this — see Section 1.10.
+>
+> Because these are material changes, we publish this update at least 7 days before the effective date, in line with Section 13. You will be asked to review and accept this updated policy again inside the app.
 
 ---
 
@@ -19,6 +24,8 @@ By installing or using KineCut, you confirm that you have read and accepted this
 
 - We do not run any servers and we do not have user accounts. We never see your videos, audio, captions, or projects.
 - Your media files are processed on your device. The only content leaving your device for the core feature is the **audio you choose to transcribe**, which is sent over HTTPS directly to **Groq's API** using **your own Groq API key**.
+- **Optional Google Gemini:** if you add your **own** Google Gemini API key, KineCut can also send your **audio** and your **transcript text** to **Google's Gemini API** under your own Google account, for sharper transcription and captions. This is **off by default** and only happens if you add a key. **If your Gemini key is on Google's free tier, Google may use your audio and text to improve Google's products and human reviewers may read them** — use a paid Gemini key, or skip Gemini, if you don't want that. See Section 1.9.
+- The app exports videos using a short-lived **foreground service** and shows a **progress notification** so a long export keeps running when you switch away. On Android 13+ this needs **notification permission**. This is entirely on your device — no media or content is uploaded for it.
 - We use **Google Firebase Analytics** to understand how the app is used at an aggregate level. This is automatic, standard Android telemetry; we do not link it to your name, email, or your media content.
 - We display **Google AdMob ads** (a full-screen ad shown before you export a video, which you may dismiss, and an occasional interstitial when you return to the Home screen). AdMob is operated by Google and uses your device's **advertising identifier** and ad-interaction data to serve and measure ads.
 - In the EEA, UK, Switzerland and other regions where required, Google shows you a **consent form** (Google's User Messaging Platform) before personalized ads are served. You can change or withdraw this choice at any time.
@@ -95,6 +102,37 @@ Google may store and process AdMob data in the United States and other countries
 ### 1.7 Google Play Services (operating-system level)
 KineCut runs on Android and uses Google Play Services where present (required for Firebase Analytics, Google AdMob, and standard Play distribution). Google Play Services is part of the Android operating system and is governed by Google's policies, not ours.
 
+### 1.8 Your optional Google Gemini API key ("bring your own key")
+KineCut includes an **optional** integration with Google's Gemini API. It is **disabled until you choose to enter your own Google Gemini API key** in the app's setup screen. If you do not add a key, the app runs entirely on the Groq path described above and **nothing is ever sent to Google Gemini**.
+
+If you add a Gemini key:
+
+- It is stored **locally on your device** using Android's `EncryptedSharedPreferences` with the `AES256_GCM` master-key scheme (key names encrypted with `AES256_SIV`, values with `AES256_GCM`, via `androidx.security:security-crypto`), in a storage file separate from your Groq key.
+- It is **never transmitted to us or to any party other than Google's official Gemini API endpoint** (`generativelanguage.googleapis.com`), and is sent only in the request header that authenticates your own calls.
+- It is **never shared with, reused for, or exposed to any other KineCut user.** Each user supplies and uses only their own key. We operate no server and never receive, log, or store your key.
+- It is the credential of **your own** Google account. **You** are Google's customer for those API calls; you remain responsible for the activity, billing, quota, and terms associated with your Google/Gemini account.
+- It is included in Android Auto Backup if you have backup enabled (see Section 6). To exclude it, disable Auto Backup for KineCut.
+- Can be cleared at any time by clearing the field in setup, or via Settings → Apps → KineCut → Storage → Clear data, or by uninstalling the app.
+
+### 1.9 Data sent to Google Gemini (only when you add a Gemini key)
+When — and only when — you have added your own Gemini key, KineCut may send the following over HTTPS (TLS) directly to Google's Gemini API, initiated by your explicit action (pressing Generate / transcribe / export captions):
+
+- **The audio you choose to transcribe or caption** (extracted from the media you selected), encoded and sent inline to Gemini for speech-to-text and caption-refinement.
+- **The transcript text** produced from your audio, sent to Gemini for optional "smart-work" passes (choosing words to emphasise and where phrases break).
+
+KineCut does **not** relay this through any server we operate; the data goes from your device straight to Google under your own API key. We never see it.
+
+**How Google uses this data depends on your Gemini plan — please read this carefully:**
+
+- **Free / unpaid Gemini tier (e.g. a key from Google AI Studio with no billing):** Under Google's *Gemini API Additional Terms of Service*, Google uses the content you submit and the responses generated **to provide, improve and develop Google's products, services and machine-learning technologies**, and **human reviewers may read, annotate and process your inputs and outputs** (Google states it disconnects this data from your Google account, API key and Cloud project before human review). **Do not send audio or text you consider sensitive, confidential, or personal on a free-tier key.**
+- **Paid Gemini tier:** Google states it **does not** use your prompts or responses to improve its products, and processes them under Google's Data Processing Addendum.
+- **EEA, UK and Switzerland:** Google's terms state that the "Paid Services" data rules apply to **all** Gemini API use in these regions (even free quota), and that API clients there may need to be on a paid plan. If you are in these regions, use a paid Gemini key.
+
+This integration is governed by **Google's Gemini API Additional Terms of Service** (https://ai.google.dev/gemini-api/terms), the **Generative AI Prohibited Use Policy** (https://policies.google.com/terms/generative-ai/use-policy), and **Google's Privacy Policy** (https://policies.google.com/privacy), all of which you accept with Google when you create and use your Gemini API key. You are solely responsible for your use of your Gemini key and for ensuring your content and use comply with those Google policies and applicable law. Google receives your audio and transcript text for these calls; it does **not** receive your Groq API key, your saved projects, your exported videos, your name, or your email from KineCut.
+
+### 1.10 Export notifications and the export foreground service
+When you export a video, KineCut starts a short-lived **foreground service** that keeps the export running if you press Home or lock your phone, and shows a **progress notification** while the export is in progress. On Android 13 and above, showing this notification requires the `POST_NOTIFICATIONS` permission, which the system asks you to allow; if you deny it, the export still works, just without a visible progress notification. The service performs **no network activity and uploads nothing** — it only keeps the on-device export alive and reports progress. It stops automatically when the export finishes, fails, or is cancelled.
+
 ---
 
 ## 2. Information we do NOT collect
@@ -102,7 +140,8 @@ KineCut runs on Android and uses Google Play Services where present (required fo
 - We do not collect your name, email, phone number, postal address, or government identifiers.
 - We do not require account registration or login with KineCut.
 - We do not access your contacts, calendar, SMS, call logs, microphone (live), camera (live), or precise location.
-- We do not have a backend; we cannot read your stored projects, exports, or API key.
+- We do not have a backend; we cannot read your stored projects, exports, or API keys (Groq or the optional Gemini key).
+- We do not enable the Gemini integration unless you add your own key; with no key, nothing is sent to Google Gemini. We never receive your Gemini key, your audio, or your transcripts — they go directly from your device to Google under your own account.
 - We do not sell your personal information for money.
 - We do not use Firebase Crashlytics, Firebase Authentication, Firebase Cloud Messaging, Google Sign-In, or any analytics SDK other than Firebase Analytics described in Section 1.5, and no advertising SDK other than Google AdMob described in Section 1.6.
 
@@ -116,7 +155,7 @@ KineCut requests only the permissions required for the features it offers:
 
 | Permission | Purpose |
 |---|---|
-| `INTERNET` | Send audio to Groq's API for transcription; let Firebase Analytics send aggregate telemetry; let Google AdMob request and measure ads. |
+| `INTERNET` | Send audio to Groq's API for transcription; if you add a Gemini key, send audio/transcript text to Google's Gemini API; let Firebase Analytics send aggregate telemetry; let Google AdMob request and measure ads. |
 | `ACCESS_NETWORK_STATE` | Let the ad and analytics SDKs check connectivity before making network requests. |
 | `com.google.android.gms.permission.AD_ID` | Declared automatically by the Google Mobile Ads SDK. Allows access to the Android Advertising ID for ad serving, frequency capping, and fraud prevention. You can reset or delete this ID at any time (Section 8). |
 | `READ_MEDIA_VIDEO` | Let you select video files to caption or animate (Android 13+). |
@@ -124,6 +163,8 @@ KineCut requests only the permissions required for the features it offers:
 | `READ_MEDIA_IMAGES` | Let you select images for project assets on devices that grant media via this permission. |
 | `READ_EXTERNAL_STORAGE` (Android 12 and below only) | Let you select media on devices that don't yet expose granular media permissions. |
 | `WRITE_EXTERNAL_STORAGE` (Android 9 and below only) | Save exported videos to your device gallery on legacy versions of Android. Not used on Android 10+ (we use scoped storage / MediaStore). |
+| `FOREGROUND_SERVICE`, `FOREGROUND_SERVICE_DATA_SYNC` | Keep a video export running on your device if you leave the app or lock the phone mid-export. No network use. |
+| `POST_NOTIFICATIONS` (Android 13+) | Show the export-progress notification while a video is being exported. You may deny it; export still works without the notification. |
 
 We do not request `ACCESS_FINE_LOCATION`, `ACCESS_COARSE_LOCATION`, `RECORD_AUDIO`, `CAMERA`, `READ_CONTACTS`, or any "dangerous" runtime permission beyond the media permissions listed.
 
@@ -133,7 +174,8 @@ We do not request `ACCESS_FINE_LOCATION`, `ACCESS_COARSE_LOCATION`, `RECORD_AUDI
 
 Where the GDPR or UK GDPR applies, we rely on the following lawful bases:
 
-- **Contract / pre-contract steps (Art. 6(1)(b))** — to provide the app's core features that you actively requested (transcribing your selected audio, saving your project locally).
+- **Contract / pre-contract steps (Art. 6(1)(b))** — to provide the app's core features that you actively requested (transcribing your selected audio, saving your project locally, and exporting your video, including the keep-alive export notification).
+- **Consent (Art. 6(1)(a))** — for the **optional** Google Gemini integration: nothing is sent to Google Gemini unless you choose to add your own Gemini key, and you can remove it at any time. By adding a key you instruct us to send your audio and transcript text to Google under your own account, and you accept Google's Gemini API terms directly.
 - **Legitimate interests (Art. 6(1)(f))** — for limited Firebase Analytics telemetry used to maintain, debug, and improve the app, and for serving **non-personalized** ads and fraud prevention. We balance this against your privacy interests; analytics data is pseudonymous and aggregated.
 - **Consent (Art. 6(1)(a))** — for **personalized advertising** through Google AdMob, collected via Google's User Messaging Platform consent form where required, and for analytics where local law requires consent. You may withdraw consent at any time (see Section 8).
 
@@ -141,9 +183,9 @@ Where the GDPR or UK GDPR applies, we rely on the following lawful bases:
 
 ## 5. International transfers
 
-KineCut is operated from India. Audio you transcribe is sent to Groq's infrastructure in the United States. Firebase Analytics and Google AdMob data are processed by Google on servers in the United States and other countries where Google operates.
+KineCut is operated from India. Audio you transcribe is sent to Groq's infrastructure in the United States. If you add a Gemini key, your audio and transcript text are sent to Google's Gemini API, processed by Google in the United States and other countries where Google operates. Firebase Analytics and Google AdMob data are processed by Google on servers in the United States and other countries where Google operates.
 
-For users in the EEA, UK and Switzerland, Groq and Google rely on the **EU Standard Contractual Clauses** and equivalent transfer mechanisms to lawfully transfer personal data outside those regions. KineCut is not party to these clauses; we rely on Groq's and Google's transfer frameworks for the third-party processing they perform.
+For users in the EEA, UK and Switzerland, Groq and Google rely on the **EU Standard Contractual Clauses** and equivalent transfer mechanisms to lawfully transfer personal data outside those regions. KineCut is not party to these clauses; we rely on Groq's and Google's transfer frameworks for the third-party processing they perform. For the optional Gemini integration in the EEA, UK and Switzerland, Google's terms state that the paid-tier data protections apply to all Gemini API use and that a paid plan may be required; if you are in these regions and choose to use Gemini, use a paid Gemini key.
 
 ---
 
@@ -159,6 +201,7 @@ This backup is associated with **your** Google Account, end-to-end encrypted by 
 
 - **On your device:** Saved projects, settings, and your encrypted Groq API key remain until you delete a project, clear app data, or uninstall the app.
 - **Groq:** Per Groq's Privacy Policy, Groq does not use your audio or transcripts to train models and retains data only as needed to operate the service. Retention is governed by Groq.
+- **Google Gemini (only if you use it):** Retention and use of any audio or text you send to Gemini are governed by Google's Gemini API terms and Privacy Policy. On the free tier, Google may retain and use it to improve Google's products (including human review); on the paid tier, Google states it does not use it to train its products. Remove your Gemini key to stop sending anything further; data already sent is handled under Google's policies and your Google account controls.
 - **Firebase Analytics:** We retain analytics events for the maximum default period of **14 months**. Firebase Installation IDs may persist longer until you reinstall or clear data.
 - **Google AdMob:** Retention of advertising identifiers and ad-event data is governed by Google's policies. Resetting your advertising ID or opting out of ad personalization limits future use.
 
@@ -171,6 +214,7 @@ You can, at any time:
 
 - **Stop the app from sending audio to Groq** by not pressing the transcription button.
 - **Delete your Groq API key** from KineCut (Auto Captions screen → clear field, or Settings → Apps → KineCut → Storage → Clear data).
+- **Delete your Google Gemini API key** (clear the Gemini field in setup, or Clear data) to disable the Gemini integration so nothing further is sent to Google Gemini. For Gemini data Google already holds, use your Google account and Gemini/Cloud privacy controls.
 - **Change or withdraw your ads consent** through the in-app/Google "Privacy options" or consent form, where shown for your region.
 - **Opt out of personalized ads** via Settings → Google → Ads (or "Ads" on your device) → "Opt out of Ads Personalisation"; ads then become non-personalized/contextual.
 - **Reset or delete your Android Advertising ID** in Settings → Privacy → Ads (or "Ads" on your device).
@@ -198,7 +242,7 @@ We will respond to grievances within the statutory timeline (currently 30 days u
 ### 8.5 Children's privacy (COPPA, GDPR-K, DPDP §9)
 KineCut is **not directed at children** and is rated for users 13 and over. It is not configured as a child-directed app, and we do not knowingly collect personal information from children under 13 (under 16 in some EEA jurisdictions; under 18 in India under the DPDP Act). Advertising shown through AdMob is general-audience and not directed to children. If you believe a child has used the app, please contact us and we will take reasonable steps to delete what we can identify.
 
-If you are a parent or guardian and you discover your child has used KineCut with your Groq API key, please remove your key from the app and contact Groq directly to handle any data your child may have submitted to Groq's API.
+If you are a parent or guardian and you discover your child has used KineCut with your Groq or Gemini API key, please remove your key(s) from the app and contact Groq and/or Google directly to handle any data your child may have submitted to their APIs.
 
 ---
 
@@ -213,10 +257,10 @@ Please tell us your country/state of residence and the right you wish to exercis
 
 ## 10. Security
 
-- Your Groq API key is encrypted at rest using AES-256 GCM via Android's `EncryptedSharedPreferences`, is never shared or reused between users, and is never transmitted to anyone except Groq's official API.
-- Network traffic to Groq, Firebase, and Google AdMob uses HTTPS / TLS 1.2 or higher.
+- Your Groq API key and your optional Gemini API key are each encrypted at rest using AES-256 GCM via Android's `EncryptedSharedPreferences` (in separate storage files), are never shared or reused between users, and are never transmitted to anyone except the respective provider's official API (Groq, or Google's Gemini API).
+- Network traffic to Groq, Google's Gemini API, Firebase, and Google AdMob uses HTTPS / TLS 1.2 or higher.
 - We operate no servers, databases, or login systems, eliminating common attack surfaces (credential leaks, SQL injection, server breaches).
-- No security measure is absolute. You are responsible for keeping your device, lock screen, Google Account, and Groq account secure. If you suspect your Groq API key has been exposed, regenerate it at https://console.groq.com/keys.
+- No security measure is absolute. You are responsible for keeping your device, lock screen, Google Account, Groq account, and Gemini/Google AI Studio account secure. If you suspect your Groq API key has been exposed, regenerate it at https://console.groq.com/keys; if you suspect your Gemini key has been exposed, regenerate it at https://aistudio.google.com/apikey.
 
 ---
 
@@ -227,6 +271,7 @@ KineCut depends on the following third-party services. Their handling of your da
 | Service | Role | Privacy policy |
 |---|---|---|
 | Groq, Inc. | AI speech-to-text transcription using your own API key | https://groq.com/privacy-policy/ |
+| Google LLC (Gemini API) | OPTIONAL AI transcription, caption refinement and smart-work using **your own** Gemini API key (off unless you add a key) | https://ai.google.dev/gemini-api/terms ; https://policies.google.com/terms/generative-ai/use-policy ; https://policies.google.com/privacy |
 | Google LLC / Firebase | App analytics (Firebase Analytics) | https://firebase.google.com/support/privacy ; https://policies.google.com/privacy |
 | Google AdMob (Google LLC) | In-app advertising (rewarded + interstitial), ad measurement and fraud prevention; consent via Google User Messaging Platform | https://policies.google.com/technologies/ads ; https://policies.google.com/privacy |
 | Google Play Services | Required runtime layer for Firebase, AdMob and Play distribution | https://policies.google.com/privacy |
@@ -237,9 +282,14 @@ We are not responsible for the privacy practices of these third parties. Where t
 
 ## 12. AI-generated content disclosure
 
-Captions and transcripts produced by KineCut are generated by an AI speech-to-text model operated by Groq. AI output may contain errors, mis-transcriptions, or omissions. You are responsible for reviewing and correcting the output before publishing or relying on it for any consequential purpose. KineCut and its publisher are not liable for inaccuracies in AI-generated output.
+Captions and transcripts produced by KineCut are generated by AI speech-to-text and language models operated by Groq and, if you enable it, by Google's Gemini API. AI output may contain errors, mis-transcriptions, or omissions. You are responsible for reviewing and correcting the output before publishing or relying on it for any consequential purpose. KineCut and its publisher are not liable for inaccuracies in AI-generated output.
 
-You are responsible for ensuring that any media you transcribe with KineCut is content you have the legal right to use, and that your use complies with Groq's Acceptable Use Policy (https://console.groq.com/docs/legal/ai-policy). Do not use the app to transcribe content you do not have rights to, to generate harassing or unlawful material, to bypass rate limits or platform restrictions, or for any purpose prohibited by Groq's policies or applicable law.
+You are responsible for ensuring that any media you transcribe with KineCut is content you have the legal right to use, and that your use complies with the policies of whichever provider you use:
+
+- **Groq** — Groq's Acceptable Use Policy (https://console.groq.com/docs/legal/ai-policy).
+- **Google Gemini (if you add a key)** — Google's Gemini API Additional Terms of Service (https://ai.google.dev/gemini-api/terms) and the Generative AI Prohibited Use Policy (https://policies.google.com/terms/generative-ai/use-policy). You enter your own Gemini key, you are Google's customer for those calls, and you are solely responsible for your use of the Gemini API through KineCut. Google's terms describe the Gemini API as intended for developers building for professional or business purposes; by adding your key you confirm you may use it on those terms.
+
+Do not use the app to process content you do not have rights to, to generate harassing, deceptive, infringing or unlawful material, to create non-consensual or deceptive media, to bypass rate limits or platform restrictions, or for any purpose prohibited by the applicable provider's policies or by law. KineCut does not itself send anything to any AI provider beyond the audio/text needed for the feature you trigger, and sends to Gemini only when you have added your own Gemini key.
 
 ---
 
